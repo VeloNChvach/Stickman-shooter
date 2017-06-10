@@ -10,6 +10,7 @@ namespace Stickman_shooter
         private GameObject canvasGame;
         private GameObject canvasMenu;
         private GameObject canvasRestart;
+        private GameObject canvasMultiplayer;
         private GameObject player;
         private GameObject bot;
         private bool preRestart = true;
@@ -20,36 +21,52 @@ namespace Stickman_shooter
             canvasGame = GameObject.Find("Canvas_game");
             canvasMenu = GameObject.Find("Canvas_menu");
             canvasRestart = GameObject.Find("Canvas_restart");
-            player = GameObject.FindGameObjectWithTag("Player");
-            //player = Resources.Load("Prefabs/Player", typeof(GameObject)) as GameObject;
+            canvasMultiplayer = GameObject.Find("Canvas_multiplayer");
+
+            AddEventOnCanvasMenu();
 
             canvasGame.SetActive(false);
             canvasRestart.SetActive(false);
-            player.SetActive(false);// disable Player
+            canvasMultiplayer.SetActive(false);
         }
 
-        public void GoMultiplayer()
+        private void AddEventOnCanvasMenu()
+        {
+            Button[] button = FindObjectsOfType<Button>();
+            for (int i = 0; i < button.Length; i++)
+            {
+                if (button[i].name == "Btn_Multiplayer")
+                    button[i].onClick.AddListener(GoMultiplayer);
+                if (button[i].name == "Btn_AI")
+                    button[i].onClick.AddListener(GoAI);
+            }
+        }
+
+        private void GoMultiplayer()
         {
             //Multiplayer
             canvasMenu.SetActive(false); // Close UI menu
+            canvasMultiplayer.SetActive(true); // Open canvas Multiplayer
+            gameObject.AddComponent(typeof(Server)); // Add script Server on Main
         }
 
-        public void GoAI()
+        private void GoAI()
         {
             //AI
             canvasMenu.SetActive(false); // Close UI menu
             canvasGame.SetActive(true);
+            canvasMultiplayer.SetActive(false);
 
-            player.SetActive(true); // Enabled Player
-            //Instantiate(Resources.Load("Prefabs/Player", typeof(GameObject))); // Enabled Player
-            bot = Instantiate(Resources.Load("Prefabs/Bot", typeof(GameObject))) as GameObject; // Enabled Bot
+            player = Instantiate(Resources.Load("Prefabs/Player", typeof(GameObject)) as GameObject); // Init player
+            bot = Instantiate(Resources.Load("Prefabs/Bot", typeof(GameObject))) as GameObject; // Init bot
         }
 
         public void PreRestart(GameObject looser)
         {
             canvasGame.SetActive(false);
             canvasRestart.SetActive(true);
-            
+            canvasMultiplayer.SetActive(false);
+
             if (preRestart)
             {
                 if (looser.tag == "Player")
@@ -60,7 +77,7 @@ namespace Stickman_shooter
                 else if (looser.tag == "Enemy")
                 {
                     canvasRestart.transform.GetComponentInChildren<Text>().text = "Player win!";
-                    player.SetActive(false);
+                    Destroy(player);
                 }
                     
                 preRestart = false; // without 2 winners
@@ -72,6 +89,7 @@ namespace Stickman_shooter
         {
             canvasGame.SetActive(true);
             canvasRestart.SetActive(false);
+            canvasMultiplayer.SetActive(false);
             preRestart = true;
 
             GoAI();

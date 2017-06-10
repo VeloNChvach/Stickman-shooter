@@ -25,5 +25,12 @@ namespace Stickman_shooter
             else
                 transform.position = new Vector3(transform.position.x, downLimit, transform.position.z);
         }
+
+        public virtual void Shot(float shiftBulletX)
+        {
+            // Instantiate bullet
+            Vector3 startPosBul = new Vector3(transform.position.x + shiftBulletX, transform.position.y, transform.position.z); // start pos Bullet
+            Instantiate(Resources.Load("Prefabs/Bullet", typeof(GameObject)), startPosBul, Quaternion.identity);
+        }
     }
 }

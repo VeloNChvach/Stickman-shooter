@@ -30,8 +30,7 @@ namespace Stickman_shooter
         private void OnTriggerEnter2D(Collider2D collision)
         {
             Destroy(gameObject); // Destroy bullet
-            //Destroy(collision.gameObject); // Destroy Enemy
-            collision.gameObject.SetActive(false);
+            Destroy(collision.gameObject); // Destroy Enemy
 
             if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy")
                 GameObject.Find("Main").GetComponent<Main>().PreRestart(collision.gameObject);

@@ -44,9 +44,7 @@ namespace Stickman_shooter
                 return;
             fixedTime = Time.time;
 
-            // Instantiate bullet
-            Vector3 startPosBul = new Vector3(transform.position.x + shiftBulletX, transform.position.y, transform.position.z); // start pos Bullet
-            Instantiate(Resources.Load("Prefabs/Bullet", typeof(GameObject)), startPosBul, Quaternion.identity); // Instantiate bullet
+            base.Shot(shiftBulletX);
         }
     }
 }
